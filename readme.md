@@ -313,3 +313,39 @@ npm i -D extract-text-webpack-plugin@next
 	 ]
  }
 ```
+## 六、图片 loader
+>安装 file-loader 和 url-loader
+```
+cnpm i -D file-loader
+cnpm i -D url-loader 
+```
+**file-loader** 就是将文件进行一些处理后（主要处理文件名、路径、解析文件url），并将文件移到纯输出目录。
+**url-loader** 一般与 **file-loader** 配合使用，功能与 file-loader 类似，如果文件 <span style="color:red"><= limit</span> 大小，则返回 base64 编码，否则使用 **file-loader** 将文件输出到配置目录。
+> webpack.config.js 片段
+```js
+module.exports = {
+	// 省略其他配置。。
+	mudule: {
+		rules: [
+			//...
+			{
+				test: /\.(jpe?g|png|gif)$/i, // i = ignore (正则默认区分大小写，加 i 不区分大小写)
+				use: [
+					{
+						loader: 'url-loader',
+						options: {
+							limit: 10240, // 小于等于此值，转 base64
+							fallback: {
+								loader: 'file-loader',
+								options: {
+									name: 'img/[name].[hash:8].[ext]'
+								}
+							}
+						}
+					}
+				]
+			}
+		]
+	}
+}
+```
