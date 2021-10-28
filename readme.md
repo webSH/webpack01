@@ -1,6 +1,6 @@
 # webpack 从零
 >node: v14.16.0  
-webpack: 5.55.  
+webpack: 5.55.1  
 webpack-cli: 4.8.0
 
 ## 一、初步
@@ -282,7 +282,7 @@ module.exports = {
 }
 ```
 `npm run build` 之前引入到 main.js 中的css文件会合并+抽出（多个css会依次合并）为 /dist/main.[hash].css，并使用 **\<style\>** 标签插入到 index.html 中
-### 拆分多个css <span style="color:red">(貌似此插件不支持 webpack5)</span>
+### 拆分多个css <span style="color:red">(貌似 webpack5 不支持此插件)</span>
 >上面我们用到的 **mini-css-extract-plugin** 会将所有的css样式合并为一个css文件，如果想拆分为一一对应的多个css文件，我们需要使用到 **extract-text-webpack-plugin**，我们需要安装 @next 版本的  **extract-text-webpack-plugin**。（ mini-css-extract-plugin 还不支持此功能）
 ```js
 npm i -D extract-text-webpack-plugin@next

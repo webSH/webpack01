@@ -6,6 +6,9 @@ html {
   margin: 0;
   padding: 0;
 }
+html {
+  padding: 1rem;
+}
 
 /*!********************************************************************************************************************************************************!*\
   !*** css ./node_modules/_css-loader@6.3.0@css-loader/dist/cjs.js!./node_modules/_less-loader@10.0.1@less-loader/dist/cjs.js!./assets/style/index.less ***!
@@ -20,5 +23,8 @@ p .imp {
   font-weight: bold;
   margin: auto 0.5rem;
   user-select: none;
+}
+img {
+  max-width: 500px;
 }
 
