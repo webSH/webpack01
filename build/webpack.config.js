@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin'); //将打包后的 js �
 const {CleanWebpackPlugin} = require('clean-webpack-plugin'); //清除打包存储目录 \dist 旧文件
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); //合并为一个 css
 // const { loader } = require('mini-css-extract-plugin');
+const Webpack = require('webpack');
 module.exports = {
 	mode:'development', // 开发模式
 	entry: {
@@ -39,8 +40,25 @@ module.exports = {
 						}
 					}
 				]
+			},
+			{
+				test: /.js$/,
+				use: {
+					loader: 'babel-loader',
+					options: {
+						presets: ['@babel/preset-env']
+					}
+				},
+				exclude: /node_modules/ //排除 modules 目录
 			}
 		]
+	},
+	devServer:{
+		port:3000,
+		hot:true,
+		static:{
+			directory: path.join(__dirname, 'disc'),
+		} //contentBase (webpack5 static 替换 contentBase 属性)
 	},
 	plugins:[
 		new CleanWebpackPlugin(),
@@ -57,6 +75,7 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: "[name].[hash].css",
 			chunkFilename: "[id].css"
-		})
+		}),
+		new Webpack.HotModuleReplacementPlugin()
 	]
 }

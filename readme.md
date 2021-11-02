@@ -11,6 +11,8 @@ node 环境下
 ```
 npm i -D webpack webpack-cli
 ```
+- **npm i -<red>D</red>** 为 **npm install --save<red>-dev</red>** 的缩写
+- **npm i -<red>S</red>** 为 **npm install --save** 的缩写
 ### 3.新建一个文件夹 src，src/main.js
 > main.js：
 ```js
@@ -282,7 +284,7 @@ module.exports = {
 }
 ```
 `npm run build` 之前引入到 main.js 中的css文件会合并+抽出（多个css会依次合并）为 /dist/main.[hash].css，并使用 **\<style\>** 标签插入到 index.html 中
-### 拆分多个css <span style="color:red">(貌似 webpack5 不支持此插件)</span>
+### 拆分多个css <red>(貌似 webpack5 不支持此插件)</red>
 >上面我们用到的 **mini-css-extract-plugin** 会将所有的css样式合并为一个css文件，如果想拆分为一一对应的多个css文件，我们需要使用到 **extract-text-webpack-plugin**，我们需要安装 @next 版本的  **extract-text-webpack-plugin**。（ mini-css-extract-plugin 还不支持此功能）
 ```js
 npm i -D extract-text-webpack-plugin@next
@@ -349,3 +351,62 @@ module.exports = {
 	}
 }
 ```
+## 七、用 bable 转义 js 文件
+>为了使我们的 js 代码兼容更多的环境我们需要安装依赖 `npm i -D babel-loader @babel/preset-env @babel/core`  
+@babel/core 模块是 babel 的核心库
+
+>配置一下: webpack.config.js 片段
+```js
+module.exports = {
+	// 其他配置...
+	module: {
+		rules:[
+			{
+				test:/\.js$/,
+				use:{
+					loader: "babel-loader",
+					options: {
+						presets: ["@babel/preset-env"]
+					}
+				},
+				exclude: /node_modules/
+			}
+		]
+	}
+}
+```
+
+>★ js 文件中声明的 function 方法为何是 xx is not defined ?   
+因为 webpack 的打包是基于模块来打包的，也就是说经过打包的文件代码是被打包到一个函数里，此时所有定义的变量或者方法已变成局部的。有了独立的作用域，定义变量，声明函数都不会污染全局作用域
+直接使用 function 的方法：提升作用域 `window.方法名 = function (){ }`
+
+## 配置 webpack-dev-server 进行热更新
+>安装 `npm i -D webpack-dev-server`
+
+>webpack.config.js 片段
+```js
+const Webpack = require('webpack');
+module.exports = {
+	//...
+	devServer:{
+		port:3000,
+		hot:true,
+		contentBase: '../dist' // webpack5 实测，contentBase 已废弃，改用 static 属性
+	},
+	plugins:[
+		new Webpack.HotModuleReplacementPlugin()
+	]
+}
+```
+>package.json 配置启动服务命令
+`js
+"scripts": {
+	"dev": "webpack-dev-server --config build/webpack.config.js --open"
+}
+`
+命令行 `npm run dev` 来启动服务。一点发现：启动服务后，dist 目录原有经 build 打包的文件会被清理掉。localhost运行的文件并不是在 dist 目录。baidu 解释：webpack 服务运行的文件是在内存中
+
+
+<style>
+	.red,red{color:red;}
+</style>
